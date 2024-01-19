@@ -23,12 +23,33 @@ public class Tiktaktoe extends JFrame{
         add(Jouer);
         add(Quitter);
         
-        setButtonsEventsHandlers();
+        setButtonsEventsHandlers(Jouer, () -> {
+            remove(Jouer);
+            remove(Quitter);
+            repaint();
+            drawGrid();
+            Server.startServer();
+        });
+        setButtonsEventsHandlers(Quitter, () -> {
+            Server.stopServer();
+            dispose();
+        });
+
         setLocationRelativeTo(null);    // place la fenêtre au milieu de l'écran
         setLayout(null);
         setResizable(false);
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        // évèement d'écoute sur la fenêtre
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Server.stopServer();
+                Client.stopClient();
+                dispose(); // Ferme la fenêtre
+            }
+        });
     }   
 
     /**
@@ -39,36 +60,20 @@ public class Tiktaktoe extends JFrame{
             cases[i] = new JButton((i + 1) + "");
             cases[i].setBounds(80 * (i % 3), 80 * (i / 3), 80, 80);
             add(cases[i]);
-        }
 
-        /** On affecte pour chaque bouton un évènement */
-        for (int i = 0; i < 9; i++) {
+            // on affecte l'évènement du bouton
             int finalI = i;
-            this.cases[i].addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent e){
-                    Client.sendData(finalI);
-                }
+            setButtonsEventsHandlers(this.cases[i], () -> {
+                Client.sendData(finalI);
             });
         }
     }
 
-    /**
-     * Cette méthode initialisera les évènements de chaque bouton
-     */
-    private void setButtonsEventsHandlers() {
-        Jouer.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                remove(Jouer);
-                remove(Quitter);
-                repaint();
-                drawGrid();
-                Server.startServer();
-            }
-        });
-
-        Quitter.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                dispose();
+    /** Cette méthode initialisera l'évènement du bouton voulut avec une action voulut */
+    private void setButtonsEventsHandlers(JButton button, Runnable action) {
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                action.run();
             }
         });
     }
@@ -77,10 +82,5 @@ public class Tiktaktoe extends JFrame{
         Tiktaktoe ttt = new Tiktaktoe();
         Grid grid = new Grid();
         Server socket = new Server();
-
-        /*
-        socket.startServer();
-        socket.sendToServer("yo");
-        */
     }
 }
