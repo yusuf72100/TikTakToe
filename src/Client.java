@@ -26,7 +26,6 @@ public class Client {
         } catch (Exception e) {
             System.out.println("Erreur lors de l'arrêt du client");
             System.out.println(e.toString());
-            System.exit(0);
         }
     }
 }

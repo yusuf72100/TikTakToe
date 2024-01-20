@@ -32,7 +32,9 @@ public class Tiktaktoe extends JFrame{
         });
         setButtonsEventsHandlers(Quitter, () -> {
             Server.stopServer();
-            dispose();
+            Client.stopClient();
+            dispose(); // Ferme la fenêtre
+            System.exit(0);
         });
 
         setLocationRelativeTo(null);    // place la fenêtre au milieu de l'écran
@@ -41,27 +43,44 @@ public class Tiktaktoe extends JFrame{
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // évèement d'écoute sur la fenêtre
+        // Évènement d'écoute sur la fenêtre
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 Server.stopServer();
                 Client.stopClient();
                 dispose(); // Ferme la fenêtre
+                System.exit(0);
             }
         });
     }   
 
-    /**
-     * Cette méthode initialisera l'affichage de la grille
-     */
+    /** Cette méthode initialisera l'affichage de la grille */
     private void drawGrid() {
+        int buttonSize = 80;
+        int gap = 10; // Espacement entre les boutons
+        int rows = 3;
+        int columns = 3;
+
+        // Calcul des dimensions de la grille
+        int gridWidth = columns * (buttonSize + gap) - gap;
+        int gridHeight = rows * (buttonSize + gap) - gap;
+
+        // Calcul des coordonnées pour centrer la grille dans la fenêtre
+        int startX = (getWidth() - gridWidth) / 2;
+        int startY = (getHeight() - gridHeight) / 2;
+
         for (int i = 0; i < 9; i++) {
             cases[i] = new JButton((i + 1) + "");
-            cases[i].setBounds(80 * (i % 3), 80 * (i / 3), 80, 80);
+
+            // Calcul des coordonnées pour chaque bouton
+            int x = startX + (i % 3) * (buttonSize + gap);
+            int y = startY + (i / 3) * (buttonSize + gap);
+
+            cases[i].setBounds(x, y, buttonSize, buttonSize);
             add(cases[i]);
 
-            // on affecte l'évènement du bouton
+            // On affecte l'évènement du bouton
             int finalI = i;
             setButtonsEventsHandlers(this.cases[i], () -> {
                 Client.sendData(finalI);

@@ -33,7 +33,6 @@ public class Server {
         } catch (Exception e) {
             System.out.println("Erreur lors de l'arrêt du serveur");
             System.out.println(e.toString());
-            System.exit(0);
         }
     }
 }
