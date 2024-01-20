@@ -12,3 +12,4 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
         return (position);
     }
 }
+//
