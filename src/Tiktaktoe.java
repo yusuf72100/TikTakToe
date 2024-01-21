@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -7,6 +8,10 @@ import javax.swing.*;
 public class Tiktaktoe extends JFrame{
     private final JButton Jouer;
     private final JButton Quitter;
+    private final JButton Heberger;
+    private final JButton Rejoindre;
+    private final Font labelFont;
+    private final JLabel label;
     JButton[] cases;
 
     /** Ce constructeur initialisera la fenêtre */
@@ -14,11 +19,18 @@ public class Tiktaktoe extends JFrame{
         super("TikTakToe de la truite");
         setSize(600 , 600);
 
+        labelFont = new Font("Arial", Font.BOLD, 20);
+        label = new JLabel("En attente d'un joueur...");
+
         cases = new JButton[9];
         Jouer = new JButton("Jouer-(placeholder)");
         Jouer.setBounds((getWidth()/2)-150,getHeight()/2-150,300,100);
+        Heberger = new JButton("Héberger-(placeholder)");
+        Heberger.setBounds((getWidth()/2)-150,getHeight()/2-150,300,100);
         Quitter = new JButton("Quitter-(placeholder)");
         Quitter.setBounds((getWidth()/2)-150,getHeight()/2,300,100);
+        Rejoindre = new JButton("Rejoindre-(placeholder)");
+        Rejoindre.setBounds((getWidth()/2)-150,getHeight()/2,300,100);
 
         add(Jouer);
         add(Quitter);
@@ -27,9 +39,20 @@ public class Tiktaktoe extends JFrame{
             remove(Jouer);
             remove(Quitter);
             repaint();
-            drawGrid();
+            add(Heberger);
+            add(Rejoindre);
+        });
+
+        setButtonsEventsHandlers(Heberger, () -> {
+            waitingScreen();
             Server.startServer();
         });
+
+        setButtonsEventsHandlers(Rejoindre, () -> {
+            waitingScreen();
+            Client.startClient();
+        });
+
         setButtonsEventsHandlers(Quitter, () -> {
             Server.stopServer();
             Client.stopClient();
@@ -80,7 +103,7 @@ public class Tiktaktoe extends JFrame{
             cases[i].setBounds(x, y, buttonSize, buttonSize);
             add(cases[i]);
 
-            // On affecte l'évènement du bouton
+            // On affecte l'évènement du bouton avec un lambda
             int finalI = i;
             setButtonsEventsHandlers(this.cases[i], () -> {
                 Client.sendData(finalI);
@@ -97,9 +120,18 @@ public class Tiktaktoe extends JFrame{
         });
     }
 
+    private void waitingScreen() {
+        remove(Heberger);
+        remove(Rejoindre);
+
+        label.setFont(labelFont);
+        label.setBounds((getWidth()-200)/2, ((getHeight()-100)/2)-20, 300 , 100);
+        add(label);
+        repaint();
+    }
+
     public static void main(String[] args){
         Tiktaktoe ttt = new Tiktaktoe();
         Grid grid = new Grid();
-        Server socket = new Server();
     }
 }

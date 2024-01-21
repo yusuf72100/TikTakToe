@@ -7,14 +7,18 @@ import java.rmi.server.UnicastRemoteObject;
  * Cette classe gèrera la communication point à point par socket
  */
 public class Server {
+    public static boolean GameStarted;
     private static Registry registry;
+    public static Position posServer;
+
     public static void startServer() {
         try {
+            GameStarted = false;
             System.out.println( "Serveur : Construction de l'implementation");
-            Position pos = new Position();
+            posServer = new Position();
             System.out.println("Objet Position lié dans le RMIregistry");
             registry = LocateRegistry.createRegistry(1099);
-            Naming.rebind("rmi://localhost:1099/Position", pos);
+            Naming.rebind("rmi://localhost:1099/Position", posServer);
             System.out.println("Attente des invocations des clients ...");
 
         } catch (Exception e) {
