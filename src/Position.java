@@ -6,9 +6,11 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class Position extends UnicastRemoteObject implements PositionInterface {
     int data;
-    public Position() throws RemoteException {
+    Tiktaktoe jeu;
+    public Position(Tiktaktoe ttt) throws RemoteException {
         super();
         this.data = 0;
+        jeu = ttt;
     }
 
     /**
@@ -19,7 +21,22 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
      */
     @Override
     public int position(int data) throws RemoteException {
-        System.out.println("Data received : " + data);
+        /** Gestion de la donné */
+        switch (data){
+            case 99:
+                System.out.println("Player connected");
+                jeu.startGame();
+                break;
+            case 100:
+                System.out.println("Player Disconnected");
+                System.out.println("Server shutting down...");
+                jeu.stopGame();
+                break;
+            default :
+                System.out.println("Data received : " + data);
+                break;
+        }
+
         return (data);
     }
 }

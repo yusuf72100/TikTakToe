@@ -29,6 +29,7 @@ public class Client {
             if (posClient != null) {
                 UnicastRemoteObject.unexportObject(posClient, true);
                 System.out.println("Client arrêté");
+                sendData(100);
             }
         } catch (Exception e) {
             System.out.println("Erreur lors de l'arrêt du client");

@@ -12,7 +12,8 @@ public class Tiktaktoe extends JFrame{
     private final JButton Rejoindre;
     private final Font labelFont;
     private final JLabel label;
-    JButton[] cases;
+    private final JButton[] cases;
+    private final JMenu MainMenu = new JMenu("Main");
 
     /** Ce constructeur initialisera la fenêtre */
     Tiktaktoe() {
@@ -32,9 +33,8 @@ public class Tiktaktoe extends JFrame{
         Rejoindre = new JButton("Rejoindre-(placeholder)");
         Rejoindre.setBounds((getWidth()/2)-150,getHeight()/2,300,100);
 
-        add(Jouer);
-        add(Quitter);
-        
+        mainMenu();
+
         setButtonsEventsHandlers(Jouer, () -> {
             remove(Jouer);
             remove(Quitter);
@@ -45,7 +45,7 @@ public class Tiktaktoe extends JFrame{
 
         setButtonsEventsHandlers(Heberger, () -> {
             waitingScreen();
-            Server.startServer();
+            Server.startServer(this);
         });
 
         setButtonsEventsHandlers(Rejoindre, () -> {
@@ -76,12 +76,18 @@ public class Tiktaktoe extends JFrame{
                 System.exit(0);
             }
         });
-    }   
+    }
+
+    private void mainMenu() {
+        add(Jouer);
+        add(Quitter);
+        repaint();
+    }
 
     /** Cette méthode initialisera l'affichage de la grille */
     private void drawGrid() {
         int buttonSize = 80;
-        int gap = 10; // Espacement entre les boutons
+        int gap = 10;           // Espacement entre les boutons
         int rows = 3;
         int columns = 3;
 
@@ -111,7 +117,7 @@ public class Tiktaktoe extends JFrame{
         }
     }
 
-    /** Cette méthode initialisera l'évènement du bouton voulut avec une action voulut */
+    /** Cette méthode initialisera l'évènement du bouton voulut avec une action voulue */
     private void setButtonsEventsHandlers(JButton button, Runnable action) {
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -128,6 +134,15 @@ public class Tiktaktoe extends JFrame{
         label.setBounds((getWidth()-200)/2, ((getHeight()-100)/2)-20, 300 , 100);
         add(label);
         repaint();
+    }
+
+    public void startGame() {
+        mainMenu();
+        Server.GameStarted = true;
+    }
+
+    public void stopGame(){
+
     }
 
     public static void main(String[] args){

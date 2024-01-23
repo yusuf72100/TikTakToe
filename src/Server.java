@@ -11,11 +11,11 @@ public class Server {
     private static Registry registry;
     public static Position posServer;
 
-    public static void startServer() {
+    public static void startServer(Tiktaktoe ttt) {
         try {
             GameStarted = false;
             System.out.println( "Serveur : Construction de l'implementation");
-            posServer = new Position();
+            posServer = new Position(ttt);
             System.out.println("Objet Position lié dans le RMIregistry");
             registry = LocateRegistry.createRegistry(1099);
             Naming.rebind("rmi://localhost:1099/Position", posServer);
