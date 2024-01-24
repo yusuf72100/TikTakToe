@@ -28,7 +28,7 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
         switch (data){
             case 99:
                 if (!Server.GameStarted){
-                    if ((connectedClients+1) == 2){
+                    if ((connectedClients+1) == 1){
                         System.out.println("Game started");
                         jeu.startGame();
                     }
