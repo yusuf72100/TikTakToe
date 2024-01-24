@@ -46,8 +46,9 @@ public class Tiktaktoe extends JFrame{
 
         setButtonsEventsHandlers(Heberger, () -> {
             waitingScreen();
-            Server.startServer(this);
             client = new Client("192.168.1.16", this);
+            Server.startServer(this);
+            client.sendData(99);
         });
         setButtonsEventsHandlers(Rejoindre, () -> {
             remove(Heberger);

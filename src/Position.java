@@ -45,6 +45,7 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
                 break;
             default :
                 System.out.println("Data received : " + data);
+                client.position(data);
                 break;
         }
 

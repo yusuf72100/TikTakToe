@@ -4,13 +4,12 @@ import java.rmi.server.UnicastRemoteObject;
 public class Client {
     private static PositionInterface posClient;
     private static Tiktaktoe ttt;
-    private static String hostname;
+    private String hostname;
 
     /**
      * Cette méthode enverra '99' au serveur ce qui signifira une demande de lancement de partie
      */
     public Client (String Hostname, Tiktaktoe tiktaktoe) {
-        sendData(99);
         hostname = Hostname;
         ttt = tiktaktoe;
     }
@@ -18,7 +17,7 @@ public class Client {
     public void sendData(int position){
         try{
             System.out.println(hostname);
-            posClient = (PositionInterface) Naming.lookup("rmi://" + hostname + ":1099/Position");
+            posClient = (PositionInterface) Naming.lookup("rmi://" + this.hostname + ":1099/Position");
             PositionInterface client = new Position(ttt);
             String result = posClient.setClient (client);
         }
