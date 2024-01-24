@@ -7,7 +7,7 @@ import java.rmi.server.UnicastRemoteObject;
 public class Position extends UnicastRemoteObject implements PositionInterface {
     int data;
     int connectedClients;
-    PositionInterface client;
+    public PositionInterface client;
     Tiktaktoe jeu;
     public Position(Tiktaktoe ttt) throws RemoteException {
         super();

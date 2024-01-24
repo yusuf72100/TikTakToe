@@ -13,9 +13,8 @@ import java.util.Enumeration;
 public class Server {
     public static boolean GameStarted;
     private static Registry registry;
-    private static  Position posServer;
+    public static  Position posServer;
     private static Tiktaktoe tiktaktoe;
-    private static PositionInterface client;
 
     public static void startServer(Tiktaktoe ttt) {
         try {

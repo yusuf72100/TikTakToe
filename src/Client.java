@@ -16,7 +16,7 @@ public class Client {
     public Client (String Hostname, Tiktaktoe tiktaktoe) throws RemoteException, MalformedURLException, NotBoundException {
         hostname = Hostname;
         ttt = tiktaktoe;
-        client = new Position(ttt);
+        client = new Position(tiktaktoe);
         server = new Position(tiktaktoe);
         server = (PositionInterface) Naming.lookup("rmi://" + this.hostname + ":1099/Position");
     }

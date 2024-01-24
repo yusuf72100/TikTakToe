@@ -51,12 +51,6 @@ public class Tiktaktoe extends JFrame{
         setButtonsEventsHandlers(Heberger, () -> {
             waitingScreen();
             Server.startServer(this);
-            try {
-                client = new Client("localhost", this);
-                client.server.registerClient(client.client);
-            } catch (RemoteException | MalformedURLException | NotBoundException e) {
-                throw new RuntimeException(e);
-            }
         });
 
         setButtonsEventsHandlers(Rejoindre, () -> {
@@ -64,6 +58,7 @@ public class Tiktaktoe extends JFrame{
             remove(Rejoindre);
             try {
                 client = new Client("localhost", this);
+                client.server.registerClient(client.client);
                 client.sendData(99);
             } catch (RemoteException | MalformedURLException | NotBoundException e) {
                 throw new RuntimeException(e);
@@ -139,7 +134,7 @@ public class Tiktaktoe extends JFrame{
                 }
                 else {
                     try {
-                        client.server.sendDataToClient(finalI);
+                        Server.posServer.sendDataToClient(finalI);
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
