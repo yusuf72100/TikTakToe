@@ -32,6 +32,7 @@ public class Server {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             Position posServer = new Position(ttt);
             Tiktaktoe tiktaktoe = ttt;
             System.out.println( "Serveur : Construction de l'implementation");
