@@ -37,6 +37,7 @@ public class Client {
 
     /** Méthode d'arrêt de la communication du client */
     public void stopClient() {
+        sendData(100);
         System.exit(0);
     }
 }

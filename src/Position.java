@@ -59,7 +59,7 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
 
     public void registerClient(PositionInterface Client) throws RemoteException {
         client = Client;
-        System.out.println("Client enregistré.");
+        System.out.println("Client registered.");
     }
 
     public void sendDataToClient(int position) throws RemoteException {

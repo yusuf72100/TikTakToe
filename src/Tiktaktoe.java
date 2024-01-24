@@ -19,12 +19,14 @@ public class Tiktaktoe extends JFrame{
     private final JMenu MainMenu = new JMenu("Main");
     private static Client client;
     private static Server server;
+    private static boolean won;
 
     /** Ce constructeur initialisera la fenêtre */
     Tiktaktoe() {
         super("TikTakToe de la truite");
         setSize(600 , 600);
 
+        won = false;
         labelFont = new Font("Arial", Font.BOLD, 20);
         label = new JLabel("En attente d'un joueur...");
 
@@ -170,7 +172,11 @@ public class Tiktaktoe extends JFrame{
     }
 
     public void stopGame(){
-
+        for (int i = 0; i < 9; i++) {
+            remove(cases[i]);
+        }
+        mainMenu();
+        repaint();
     }
 
     public static void main(String[] args){
