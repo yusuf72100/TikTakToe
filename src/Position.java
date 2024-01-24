@@ -63,7 +63,6 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
     }
 
     public void sendDataToClient(int position) throws RemoteException {
-
         client.receiveData(position);
     }
 }
