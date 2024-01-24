@@ -53,11 +53,8 @@ public class Tiktaktoe extends JFrame{
             Server.startServer(this);
             try {
                 client = new Client("localhost", this);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            } catch (NotBoundException e) {
+                client.server.registerClient(client.client);
+            } catch (RemoteException | MalformedURLException | NotBoundException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -67,11 +64,8 @@ public class Tiktaktoe extends JFrame{
             remove(Rejoindre);
             try {
                 client = new Client("localhost", this);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            } catch (NotBoundException e) {
+                client.sendData(99);
+            } catch (RemoteException | MalformedURLException | NotBoundException e) {
                 throw new RuntimeException(e);
             }
             drawGrid();

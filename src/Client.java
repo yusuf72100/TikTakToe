@@ -17,7 +17,7 @@ public class Client {
         hostname = Hostname;
         ttt = tiktaktoe;
         client = new Position(ttt);
-        server.registerClient(client);
+        server = new Position(tiktaktoe);
         server = (PositionInterface) Naming.lookup("rmi://" + this.hostname + ":1099/Position");
     }
 
