@@ -18,7 +18,7 @@ public class Client {
             System.out.println(hostname);
             PositionInterface posClient = (PositionInterface) Naming.lookup("rmi://" + this.hostname + ":1099/Position");
             int result = posClient.position(position);
-            PositionInterface client = new Position(ttt);
+            //PositionInterface client = new Position(ttt);
             //String result = posClient.setClient (client);
 
         } catch (java.rmi.ConnectException ce) {

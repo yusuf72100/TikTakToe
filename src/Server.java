@@ -14,14 +14,9 @@ public class Server {
     public static boolean GameStarted;
     private static Registry registry;
     static Tiktaktoe tiktaktoe;
-    static Position posServer;
 
-    public Server (Tiktaktoe ttt) throws RemoteException {
-        tiktaktoe = ttt;
-        posServer = new Position(ttt);
-    }
 
-    public static void startServer(Tiktaktoe tiktaktoe) {
+    public static void startServer(Tiktaktoe ttt) {
         try {
             GameStarted = false;
             /** Récupération automatique de l'adresse ip locale */
@@ -39,7 +34,8 @@ public class Server {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+            Position posServer = new Position(ttt);
+            tiktaktoe = ttt;
             System.out.println( "Serveur : Construction de l'implementation");
             System.out.println("Objet Position lié dans le RMIregistry");
             registry = LocateRegistry.createRegistry(1099);
@@ -52,11 +48,9 @@ public class Server {
         }
     }
 
-    public static String sendData(int position) throws RemoteException {
-        PositionInterface posServer = new Position(tiktaktoe);
-        String resultat = posServer.sendToClient(position);
-
-        return resultat;
+    public static void sendPositionToClient(int position) throws RemoteException {
+        PositionInterface posClient = new Position(tiktaktoe);
+        posClient.sendToServer(position);
     }
 
     public static void stopServer() {

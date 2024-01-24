@@ -50,11 +50,6 @@ public class Tiktaktoe extends JFrame{
 
         setButtonsEventsHandlers(Heberger, () -> {
             waitingScreen();
-            try {
-                server = new Server(this);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
             Server.startServer(this);
         });
 
@@ -133,7 +128,7 @@ public class Tiktaktoe extends JFrame{
                 }
                 else {
                     try {
-                        Server.sendData(finalI);
+                        Server.sendPositionToClient(finalI);
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
