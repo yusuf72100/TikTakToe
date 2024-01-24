@@ -6,11 +6,14 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class Position extends UnicastRemoteObject implements PositionInterface {
     int data;
+    int connectedClients;
+    PositionInterface client;
     Tiktaktoe jeu;
     public Position(Tiktaktoe ttt) throws RemoteException {
         super();
         this.data = 0;
         jeu = ttt;
+        connectedClients = 0;
     }
 
     /**
@@ -25,8 +28,11 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
         switch (data){
             case 99:
                 if (!Server.GameStarted){
+                    if ((connectedClients+1) == 2){
+                        jeu.startGame();
+                    }
+                    connectedClients++;
                     System.out.println("Player connected");
-                    jeu.startGame();
                 }
                 else{
                     System.out.println("Un joueur essaye de se connecter : +1 connection bloquée");
@@ -43,5 +49,12 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
         }
 
         return (data);
+    }
+
+    public String setClient(PositionInterface client) throws RemoteException{
+        this.client = client;
+        System.out.println(this.client);
+        this.client.position(111);
+        return "Success";
     }
 }

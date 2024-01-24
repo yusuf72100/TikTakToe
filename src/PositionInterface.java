@@ -5,5 +5,6 @@ import java.rmi.RemoteException;
  * Interface de l'échange des données
  */
 public interface PositionInterface extends Remote {
-    int position (int position) throws RemoteException;
+    public int position (int position) throws RemoteException;
+    public String setClient(PositionInterface client) throws RemoteException;
 }
