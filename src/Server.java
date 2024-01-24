@@ -13,6 +13,9 @@ import java.util.Enumeration;
 public class Server {
     public static boolean GameStarted;
     private static Registry registry;
+    private static  Position posServer;
+    private static Tiktaktoe tiktaktoe;
+    private static PositionInterface client;
 
     public static void startServer(Tiktaktoe ttt) {
         try {
@@ -33,8 +36,8 @@ public class Server {
                 e.printStackTrace();
             }
 
-            Position posServer = new Position(ttt);
-            Tiktaktoe tiktaktoe = ttt;
+            posServer = new Position(ttt);
+            tiktaktoe = ttt;
             System.out.println( "Serveur : Construction de l'implementation");
             System.out.println("Objet Position lié dans le RMIregistry");
             registry = LocateRegistry.createRegistry(1099);

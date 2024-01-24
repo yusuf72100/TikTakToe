@@ -46,17 +46,24 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
                 break;
             default :
                 System.out.println("Data received : " + data);
-                //client.position(data);
                 break;
         }
 
         return (data);
     }
 
-    public String setClient(PositionInterface client) throws RemoteException {
-        this.client = client;
-        System.out.println(this.client);
-        this.client.position(111);
-        return "Success";
+    public int receiveData(int position) {
+        System.out.println("Data received from server : " + position);
+        return position;
+    }
+
+    public void registerClient(PositionInterface Client) throws RemoteException {
+        client = Client;
+        System.out.println("Client enregistré.");
+    }
+
+    public void sendDataToClient(int position) throws RemoteException {
+
+        client.receiveData(position);
     }
 }
