@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Grid extends Server {
+public class Grid {
     private List<List<Integer>> grid;
 
     /**

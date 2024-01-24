@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import javax.swing.*;
 
@@ -16,6 +18,7 @@ public class Tiktaktoe extends JFrame{
     private final JButton[] cases;
     private final JMenu MainMenu = new JMenu("Main");
     private static Client client;
+    private static Server server;
 
     /** Ce constructeur initialisera la fenêtre */
     Tiktaktoe() {
@@ -47,15 +50,26 @@ public class Tiktaktoe extends JFrame{
 
         setButtonsEventsHandlers(Heberger, () -> {
             waitingScreen();
+            try {
+                server = new Server(this);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
             Server.startServer(this);
-            //client = new Client("localhost", this);
-            //client.sendData(99);
         });
 
         setButtonsEventsHandlers(Rejoindre, () -> {
             remove(Heberger);
             remove(Rejoindre);
-            client = new Client("localhost", this);
+            try {
+                client = new Client("localhost", this);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            } catch (NotBoundException e) {
+                throw new RuntimeException(e);
+            }
             drawGrid();
             repaint();
         });
