@@ -14,6 +14,7 @@ public class Tiktaktoe extends JFrame{
     private final JLabel label;
     private final JButton[] cases;
     private final JMenu MainMenu = new JMenu("Main");
+    private static Client client;
 
     /** Ce constructeur initialisera la fenêtre */
     Tiktaktoe() {
@@ -46,20 +47,19 @@ public class Tiktaktoe extends JFrame{
         setButtonsEventsHandlers(Heberger, () -> {
             waitingScreen();
             Server.startServer(this);
-            Client.startClient("localhost", this);
+            client = new Client("192.168.1.16", this);
         });
         setButtonsEventsHandlers(Rejoindre, () -> {
             remove(Heberger);
             remove(Rejoindre);
-            Client.startClient("localhost", this);
+            client = new Client("192.168.1.16", this);
             drawGrid();
             repaint();
         });
 
-
         setButtonsEventsHandlers(Quitter, () -> {
             Server.stopServer();
-            Client.stopClient();
+            client.stopClient();
             dispose(); // Ferme la fenêtre
             System.exit(0);
         });
@@ -75,7 +75,7 @@ public class Tiktaktoe extends JFrame{
             @Override
             public void windowClosing(WindowEvent e) {
                 Server.stopServer();
-                Client.stopClient();
+                if (client != null) client.stopClient();
                 dispose(); // Ferme la fenêtre
                 System.exit(0);
             }
@@ -119,7 +119,7 @@ public class Tiktaktoe extends JFrame{
             // On affecte l'évènement du bouton avec un lambda
             int finalI = i;
             setButtonsEventsHandlers(this.cases[i], () -> {
-                Client.sendData(finalI);
+                client.sendData(finalI);
             });
         }
     }
