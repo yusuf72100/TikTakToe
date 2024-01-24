@@ -13,8 +13,6 @@ import java.util.Enumeration;
 public class Server {
     public static boolean GameStarted;
     private static Registry registry;
-    static Tiktaktoe tiktaktoe;
-
 
     public static void startServer(Tiktaktoe ttt) {
         try {
@@ -35,7 +33,7 @@ public class Server {
                 e.printStackTrace();
             }
             Position posServer = new Position(ttt);
-            tiktaktoe = ttt;
+            Tiktaktoe tiktaktoe = ttt;
             System.out.println( "Serveur : Construction de l'implementation");
             System.out.println("Objet Position lié dans le RMIregistry");
             registry = LocateRegistry.createRegistry(1099);
@@ -46,11 +44,6 @@ public class Server {
             System.out.println("Erreur de liaison de l'objet Reverse");
             System.out.println(e.toString());
         }
-    }
-
-    public static void sendPositionToClient(int position) throws RemoteException {
-        PositionInterface posClient = new Position(tiktaktoe);
-        posClient.sendToServer(position);
     }
 
     public static void stopServer() {

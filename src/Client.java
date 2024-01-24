@@ -15,12 +15,10 @@ public class Client {
 
     public void sendData(int position){
         try {
-            System.out.println(hostname);
             PositionInterface posClient = (PositionInterface) Naming.lookup("rmi://" + this.hostname + ":1099/Position");
             int result = posClient.position(position);
             //PositionInterface client = new Position(ttt);
             //String result = posClient.setClient (client);
-            posClient.sendToServer(position);
 
         } catch (java.rmi.ConnectException ce) {
             System.out.println("Erreur de connexion au serveur. Assurez-vous que le serveur est en cours d'exécution.");

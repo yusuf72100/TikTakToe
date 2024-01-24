@@ -127,11 +127,7 @@ public class Tiktaktoe extends JFrame{
                     client.sendData(finalI);
                 }
                 else {
-                    try {
-                        Server.sendPositionToClient(finalI);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
+
                 }
             });
         }
