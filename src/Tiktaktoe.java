@@ -171,7 +171,8 @@ public class Tiktaktoe extends JFrame{
         Server.GameStarted = true;
     }
 
-    public void stopGame(){
+    public void stopGame() {
+        Server.stopServer();
         for (int i = 0; i < 9; i++) {
             remove(cases[i]);
         }

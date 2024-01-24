@@ -53,6 +53,12 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
     }
 
     public int receiveData(int position) {
+        switch (position) {
+            case 101:
+                System.out.println("Server closed!");
+                jeu.stopGame();
+                break;
+        }
         System.out.println("Data received from server : " + position);
         return position;
     }

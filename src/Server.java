@@ -51,6 +51,7 @@ public class Server {
 
     public static void stopServer() {
         try {
+            posServer.sendDataToClient(101);
             if (registry != null) {
                 registry.unbind("rmi://localhost:1099/Position");
                 UnicastRemoteObject.unexportObject(registry, true);
