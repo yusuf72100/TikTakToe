@@ -2,7 +2,6 @@ import java.rmi.Naming;
 import java.rmi.server.UnicastRemoteObject;
 
 public class Client {
-    private static PositionInterface posClient;
     private static Tiktaktoe ttt;
     private String hostname;
 
@@ -15,30 +14,28 @@ public class Client {
     }
 
     public void sendData(int position){
-        try{
+        try {
             System.out.println(hostname);
-            posClient = (PositionInterface) Naming.lookup("rmi://" + this.hostname + ":1099/Position");
-            PositionInterface client = new Position(ttt);
-            String result = posClient.setClient (client);
-        }
-        catch (Exception e)
-        {
-            System.out.println ("Erreur d'accès à l'objet distant.");
-            System.out.println (e.toString());
+            PositionInterface posClient = (PositionInterface) Naming.lookup("rmi://" + this.hostname + ":1099/Position");
+            int result = posClient.position(position);
+            //String result = posClient.setClient (client);
+
+        } catch (java.rmi.ConnectException ce) {
+            System.out.println("Erreur de connexion au serveur. Assurez-vous que le serveur est en cours d'exécution.");
+            System.out.println(ce.toString());
+
+        } catch (java.rmi.NotBoundException nbe) {
+            System.out.println("Erreur: Position n'est pas lié dans le RMIregistry.");
+            System.out.println(nbe.toString());
+
+        } catch (Exception e) {
+            System.out.println("Erreur générale lors de l'accès à l'objet distant.");
+            System.out.println(e.toString());
         }
     }
 
     /** Méthode d'arrêt de la communication du client */
     public void stopClient() {
-        try {
-            if (posClient != null) {
-                UnicastRemoteObject.unexportObject(posClient, true);
-                System.out.println("Client arrêté");
-                this.sendData(100);
-            }
-        } catch (Exception e) {
-            System.out.println("Erreur lors de l'arrêt du client");
-            System.out.println(e.toString());
-        }
+        System.exit(0);
     }
 }

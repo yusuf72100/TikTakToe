@@ -29,10 +29,11 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
             case 99:
                 if (!Server.GameStarted){
                     if ((connectedClients+1) == 2){
+                        System.out.println("Game started");
                         jeu.startGame();
                     }
                     connectedClients++;
-                    System.out.println("Player connected");
+                    System.out.println(connectedClients + " player(s) connected");
                 }
                 else{
                     System.out.println("Un joueur essaye de se connecter : +1 connection bloquée");
@@ -45,14 +46,14 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
                 break;
             default :
                 System.out.println("Data received : " + data);
-                client.position(data);
+                //client.position(data);
                 break;
         }
 
         return (data);
     }
 
-    public String setClient(PositionInterface client) throws RemoteException{
+    public String setClient(PositionInterface client) throws RemoteException {
         this.client = client;
         System.out.println(this.client);
         this.client.position(111);

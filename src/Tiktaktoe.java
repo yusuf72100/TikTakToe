@@ -46,21 +46,21 @@ public class Tiktaktoe extends JFrame{
 
         setButtonsEventsHandlers(Heberger, () -> {
             waitingScreen();
-            client = new Client("192.168.1.16", this);
             Server.startServer(this);
+            client = new Client("localhost", this);
             client.sendData(99);
         });
         setButtonsEventsHandlers(Rejoindre, () -> {
             remove(Heberger);
             remove(Rejoindre);
-            client = new Client("192.168.1.16", this);
+            client = new Client("localhost", this);
             drawGrid();
             repaint();
         });
 
         setButtonsEventsHandlers(Quitter, () -> {
             Server.stopServer();
-            client.stopClient();
+            //client.stopClient();
             dispose(); // Ferme la fenêtre
             System.exit(0);
         });

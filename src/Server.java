@@ -12,7 +12,6 @@ import java.util.Enumeration;
 public class Server {
     public static boolean GameStarted;
     private static Registry registry;
-    public static Position posServer;
 
     public static void startServer(Tiktaktoe ttt) {
         try {
@@ -34,7 +33,7 @@ public class Server {
             }
 
             System.out.println( "Serveur : Construction de l'implementation");
-            posServer = new Position(ttt);
+            Position posServer = new Position(ttt);
             System.out.println("Objet Position lié dans le RMIregistry");
             registry = LocateRegistry.createRegistry(1099);
             Naming.rebind("rmi://localhost:1099/Position", posServer);
