@@ -119,7 +119,7 @@ public class Tiktaktoe extends JFrame{
         int startY = (getHeight() - gridHeight) / 2;
 
         for (int i = 0; i < 9; i++) {
-            cases[i] = new JButton((i + 1) + "");
+            cases[i] = new JButton("");
 
             // Calcul des coordonnées pour chaque bouton
             int x = startX + (i % 3) * (buttonSize + gap);
