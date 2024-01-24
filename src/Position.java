@@ -52,7 +52,7 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
     }
 
     /** Réception de données du client client */
-    public int receiveData(int position) {
+    public int receiveData(int position) throws RemoteException {
         switch (position) {
             case 101:
                 System.out.println("Server closed!");

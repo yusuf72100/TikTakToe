@@ -3,6 +3,7 @@ import java.awt.event.*;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Objects;
 import javax.swing.*;
 
 /**
@@ -134,12 +135,10 @@ public class Tiktaktoe extends JFrame{
             int finalI = i;
             setButtonsEventsHandlers(this.cases[i], () -> {
                 if(client != null){
-                    client.sendData(finalI);
                     turnClient(finalI);
                 }
                 else {
                     try {
-                        Server.posServer.sendDataToClient(finalI);
                         turnServer(finalI);
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
@@ -187,26 +186,30 @@ public class Tiktaktoe extends JFrame{
     /** Méthode pour jouer un coup client */
     public void turnClient(int position) {
         // Tour du client
-        if ((turn == 2 && client == null) || (turn == 2 && client != null) && cases[position].getText() == "") {
+        if (turn == 2 && client == null || turn == 2 && Objects.equals(cases[position].getText(), "")) {
             label.setText("C'est votre tour");
             label.setFont(labelFont);
             label.setBounds((getWidth()-200)/2, 20, 300 , 100);
             add(label);
+            repaint();
             cases[position].setText("O");
             turn = 1;
+            client.sendData(position);
         }
     }
 
     /** Méthode pour jouer un coup server */
-    public void turnServer(int position) {
+    public void turnServer(int position) throws RemoteException {
         // Tour du server
-        if ((turn == 1 && client != null) || (turn == 1 && client == null) && cases[position].getText() == "") {
+        if (turn == 1 && client != null || turn == 1 && Objects.equals(cases[position].getText(), "")) {
             label.setText("C'est votre tour");
             label.setFont(labelFont);
             label.setBounds((getWidth()-200)/2, 20, 300 , 100);
             add(label);
+            repaint();
             cases[position].setText("X");
             turn = 2;
+            Server.posServer.sendDataToClient(position);
         }
     }
 
