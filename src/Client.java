@@ -13,7 +13,7 @@ public class Client {
 
     public static void sendData(int position){
         try{
-            posClient = (PositionInterface) Naming.lookup("rmi://localhost:1099/Position");
+            posClient = (PositionInterface) Naming.lookup("rmi://192.168.1.16/Position");
             int result = posClient.position (position);
         }
         catch (Exception e)

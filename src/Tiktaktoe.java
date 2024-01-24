@@ -49,8 +49,11 @@ public class Tiktaktoe extends JFrame{
         });
 
         setButtonsEventsHandlers(Rejoindre, () -> {
-            waitingScreen();
+            remove(Heberger);
+            remove(Rejoindre);
             Client.startClient();
+            drawGrid();
+            repaint();
         });
 
         setButtonsEventsHandlers(Quitter, () -> {
@@ -79,6 +82,9 @@ public class Tiktaktoe extends JFrame{
     }
 
     private void mainMenu() {
+        remove(Jouer);
+        remove(Quitter);
+        remove(label);
         add(Jouer);
         add(Quitter);
         repaint();
@@ -137,7 +143,9 @@ public class Tiktaktoe extends JFrame{
     }
 
     public void startGame() {
-        mainMenu();
+        remove(label);
+        drawGrid();
+        repaint();
         Server.GameStarted = true;
     }
 

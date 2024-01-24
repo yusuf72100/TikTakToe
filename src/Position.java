@@ -24,8 +24,13 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
         /** Gestion de la donné */
         switch (data){
             case 99:
-                System.out.println("Player connected");
-                jeu.startGame();
+                if (!Server.GameStarted){
+                    System.out.println("Player connected");
+                    jeu.startGame();
+                }
+                else{
+                    System.out.println("Un joueur essaye de se connecter : +1 connection bloquée");
+                }
                 break;
             case 100:
                 System.out.println("Player Disconnected");

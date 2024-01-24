@@ -1,7 +1,10 @@
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Enumeration;
 
 /**
  * Cette classe gèrera la communication point à point par socket
@@ -14,6 +17,22 @@ public class Server {
     public static void startServer(Tiktaktoe ttt) {
         try {
             GameStarted = false;
+            /** Récupération automatique de l'adresse ip locale */
+            try {
+                Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+                while (interfaces.hasMoreElements()) {
+                    NetworkInterface iface = interfaces.nextElement();
+                    Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                    while (addresses.hasMoreElements()) {
+                        InetAddress addr = addresses.nextElement();
+                        System.out.println("  IP: " + addr.getHostAddress());
+                        System.setProperty("java.rmi.server.hostname",addr.getHostAddress());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             System.out.println( "Serveur : Construction de l'implementation");
             posServer = new Position(ttt);
             System.out.println("Objet Position lié dans le RMIregistry");
