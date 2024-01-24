@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.rmi.RemoteException;
 import javax.swing.*;
 
 /**
@@ -47,9 +48,10 @@ public class Tiktaktoe extends JFrame{
         setButtonsEventsHandlers(Heberger, () -> {
             waitingScreen();
             Server.startServer(this);
-            client = new Client("localhost", this);
-            client.sendData(99);
+            //client = new Client("localhost", this);
+            //client.sendData(99);
         });
+
         setButtonsEventsHandlers(Rejoindre, () -> {
             remove(Heberger);
             remove(Rejoindre);
@@ -60,7 +62,7 @@ public class Tiktaktoe extends JFrame{
 
         setButtonsEventsHandlers(Quitter, () -> {
             Server.stopServer();
-            //client.stopClient();
+            client.stopClient();
             dispose(); // Ferme la fenêtre
             System.exit(0);
         });
@@ -120,7 +122,16 @@ public class Tiktaktoe extends JFrame{
             // On affecte l'évènement du bouton avec un lambda
             int finalI = i;
             setButtonsEventsHandlers(this.cases[i], () -> {
-                client.sendData(finalI);
+                if(client != null){
+                    client.sendData(finalI);
+                }
+                else {
+                    try {
+                        Server.sendData(finalI);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             });
         }
     }

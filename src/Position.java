@@ -59,4 +59,9 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
         this.client.position(111);
         return "Success";
     }
+
+    public String sendToClient(int position) throws RemoteException {
+        this.client.position(position);
+        return "Success";
+    }
 }

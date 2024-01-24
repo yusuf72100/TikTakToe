@@ -1,6 +1,7 @@
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -12,6 +13,7 @@ import java.util.Enumeration;
 public class Server {
     public static boolean GameStarted;
     private static Registry registry;
+    static Tiktaktoe tiktaktoe;
 
     public static void startServer(Tiktaktoe ttt) {
         try {
@@ -34,6 +36,7 @@ public class Server {
 
             System.out.println( "Serveur : Construction de l'implementation");
             Position posServer = new Position(ttt);
+            tiktaktoe = ttt;
             System.out.println("Objet Position lié dans le RMIregistry");
             registry = LocateRegistry.createRegistry(1099);
             Naming.rebind("rmi://localhost:1099/Position", posServer);
@@ -43,6 +46,13 @@ public class Server {
             System.out.println("Erreur de liaison de l'objet Reverse");
             System.out.println(e.toString());
         }
+    }
+
+    public static String sendData(int position) throws RemoteException {
+        PositionInterface posServer = new Position(tiktaktoe);
+        String resultat = posServer.sendToClient(position);
+
+        return resultat;
     }
 
     public static void stopServer() {
