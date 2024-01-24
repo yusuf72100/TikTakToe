@@ -51,13 +51,29 @@ public class Tiktaktoe extends JFrame{
         setButtonsEventsHandlers(Heberger, () -> {
             waitingScreen();
             Server.startServer(this);
-            client = new Client("localhost", this);
+            try {
+                client = new Client("localhost", this);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            } catch (NotBoundException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         setButtonsEventsHandlers(Rejoindre, () -> {
             remove(Heberger);
             remove(Rejoindre);
-            client = new Client("localhost", this);
+            try {
+                client = new Client("localhost", this);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            } catch (NotBoundException e) {
+                throw new RuntimeException(e);
+            }
             drawGrid();
             repaint();
         });
