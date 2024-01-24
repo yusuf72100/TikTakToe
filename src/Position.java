@@ -60,9 +60,12 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
         return "Success";
     }
 
-    @Override
+    public void receiveData(int position) {
+        System.out.println("Server data : " + position);
+    }
+
     public void sendToServer(int position) throws RemoteException {
         System.out.println("Server sent position: " + position);
-        // Faites quelque chose avec la position reçue du serveur, par exemple, mettez à jour l'interface utilisateur du client
+        client.receiveData(position);
     }
 }

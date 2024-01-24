@@ -20,6 +20,7 @@ public class Client {
             int result = posClient.position(position);
             //PositionInterface client = new Position(ttt);
             //String result = posClient.setClient (client);
+            posClient.sendToServer(position);
 
         } catch (java.rmi.ConnectException ce) {
             System.out.println("Erreur de connexion au serveur. Assurez-vous que le serveur est en cours d'exécution.");
