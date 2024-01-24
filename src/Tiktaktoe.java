@@ -19,14 +19,16 @@ public class Tiktaktoe extends JFrame{
     private final JMenu MainMenu = new JMenu("Main");
     private static Client client;
     private static Server server;
-    private static boolean won;
+    private static int won;
+    private static int turn;
 
     /** Ce constructeur initialisera la fenêtre */
     Tiktaktoe() {
         super("TikTakToe de la truite");
         setSize(600 , 600);
+        turn = 1;
 
-        won = false;
+        won = 0;
         labelFont = new Font("Arial", Font.BOLD, 20);
         label = new JLabel("En attente d'un joueur...");
 
@@ -133,10 +135,12 @@ public class Tiktaktoe extends JFrame{
             setButtonsEventsHandlers(this.cases[i], () -> {
                 if(client != null){
                     client.sendData(finalI);
+                    turnClient(finalI);
                 }
                 else {
                     try {
                         Server.posServer.sendDataToClient(finalI);
+                        turnServer(finalI);
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
@@ -178,6 +182,32 @@ public class Tiktaktoe extends JFrame{
         }
         mainMenu();
         repaint();
+    }
+
+    /** Méthode pour jouer un coup client */
+    public void turnClient(int position) {
+        // Tour du client
+        if ((turn == 2 && client == null) || (turn == 2 && client != null) && cases[position].getText() == "") {
+            label.setText("C'est votre tour");
+            label.setFont(labelFont);
+            label.setBounds((getWidth()-200)/2, 20, 300 , 100);
+            add(label);
+            cases[position].setText("O");
+            turn = 1;
+        }
+    }
+
+    /** Méthode pour jouer un coup server */
+    public void turnServer(int position) {
+        // Tour du server
+        if ((turn == 1 && client != null) || (turn == 1 && client == null) && cases[position].getText() == "") {
+            label.setText("C'est votre tour");
+            label.setFont(labelFont);
+            label.setBounds((getWidth()-200)/2, 20, 300 , 100);
+            add(label);
+            cases[position].setText("X");
+            turn = 2;
+        }
     }
 
     public static void main(String[] args){

@@ -22,14 +22,13 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
      * @return
      * @throws RemoteException
      */
-    @Override
     public int position(int data) throws RemoteException {
-        /** Gestion de la donné */
+        /** Gestion de la donnée */
         switch (data){
             case 99:
                 if (!Server.GameStarted){
                     if ((connectedClients+1) == 1){
-                        System.out.println("Game started");
+                        System.out.println("Game started!");
                         jeu.startGame();
                     }
                     connectedClients++;
@@ -46,28 +45,34 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
                 break;
             default :
                 System.out.println("Data received : " + data);
+                jeu.turnClient(data);
                 break;
         }
-
         return (data);
     }
 
+    /** Réception de données du client client */
     public int receiveData(int position) {
         switch (position) {
             case 101:
                 System.out.println("Server closed!");
                 jeu.stopGame();
                 break;
+            default:
+                jeu.turnServer(position);
+                break;
         }
         System.out.println("Data received from server : " + position);
         return position;
     }
 
+    /** Cette méthode permettra de stocker l'instance du client sur le serveur */
     public void registerClient(PositionInterface Client) throws RemoteException {
         client = Client;
         System.out.println("Client registered.");
     }
 
+    /** Méthpde d'envoi de données du serveur au client */
     public void sendDataToClient(int position) throws RemoteException {
         client.receiveData(position);
     }
