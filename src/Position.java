@@ -7,10 +7,12 @@ import java.rmi.server.UnicastRemoteObject;
 public class Position extends UnicastRemoteObject implements PositionInterface {
     int data;
     int connectedClients;
+    private int nb_votant;
     public PositionInterface client;
     Tiktaktoe jeu;
     public Position(Tiktaktoe ttt) throws RemoteException {
         super();
+        nb_votant = 0;
         this.data = 0;
         jeu = ttt;
         connectedClients = 0;
@@ -43,6 +45,16 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
                 System.out.println("Server shutting down...");
                 jeu.stopGame();
                 break;
+            /** On recommence la partie */
+            case 500:
+                addVote();
+                System.out.println("Votes number : " + nb_votant);
+                if (nb_votant >= 2) {
+                    System.out.println("Restarting the session");
+                    jeu.restartGame();
+                    setVotes(0);
+                }
+                break;
             default :
                 System.out.println("Data received : " + data);
                 jeu.turnClient(data);
@@ -51,12 +63,22 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
         return (data);
     }
 
-    /** Réception de données du client client */
+    /** Réception de données du client */
     public int receiveData(int position) throws RemoteException {
         switch (position) {
             case 101:
                 System.out.println("Server closed!");
                 jeu.stopGame();
+                break;
+            /** On recommence la partie */
+            case 500:
+                addVote();
+                System.out.println("Votes number : " + nb_votant);
+                if (nb_votant >= 2) {
+                    System.out.println("Restarting the session");
+                    jeu.restartGame();
+                    setVotes(0);
+                }
                 break;
             default:
                 jeu.turnServer(position);
@@ -75,5 +97,18 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
     /** Méthpde d'envoi de données du serveur au client */
     public void sendDataToClient(int position) throws RemoteException {
         client.receiveData(position);
+    }
+
+    public void addVote() throws RemoteException {
+        nb_votant++;
+    }
+
+    public int getVotes() throws RemoteException {
+        return nb_votant;
+    }
+
+    @Override
+    public void setVotes(int position) throws RemoteException {
+        nb_votant = position;
     }
 }

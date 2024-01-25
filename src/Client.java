@@ -1,4 +1,5 @@
 import java.net.MalformedURLException;
+import java.rmi.ConnectException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -25,7 +26,7 @@ public class Client {
         try {
             int result = server.position(position);
 
-        } catch (java.rmi.ConnectException ce) {
+        } catch (ConnectException ce) {
             System.out.println("Erreur de connexion au serveur. Assurez-vous que le serveur est en cours d'exécution.");
             System.out.println(ce.toString());
 
@@ -38,6 +39,5 @@ public class Client {
     /** Méthode d'arrêt de la communication du client */
     public void stopClient() {
         sendData(100);
-        System.exit(0);
     }
 }

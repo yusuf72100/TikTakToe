@@ -14,6 +14,8 @@ public class Tiktaktoe extends JFrame{
     private final JButton Quitter;
     private final JButton Heberger;
     private final JButton Rejoindre;
+    private final JButton Restart;
+    private final JButton RTH;
     private final Font labelFont;
     private final JLabel label;
     private final JButton[] cases;
@@ -28,8 +30,13 @@ public class Tiktaktoe extends JFrame{
         super("TikTakToe de la truite");
         setSize(600 , 600);
         turn = 1;
-
         won = false;
+
+        Restart = new JButton("Rejouer");
+        Restart.setBounds(10,50,100,25);
+        RTH = new JButton("Quitter");
+        RTH.setBounds(10,110,100,25);
+
         labelFont = new Font("Arial", Font.BOLD, 20);
         label = new JLabel("En attente d'un joueur...");
 
@@ -58,6 +65,49 @@ public class Tiktaktoe extends JFrame{
             Server.startServer(this);
         });
 
+        setButtonsEventsHandlers(Restart, () -> {
+            if(client != null) {
+                client.sendData(500);
+                try {
+                    client.client.addVote();
+
+                    if(client.client.getVotes() >= 2) {
+                        client.client.setVotes(0);
+                        client.server.setVotes(0);
+                        restartGame();
+                    }
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            else {
+                try {
+                    Server.posServer.sendDataToClient(500);
+                    Server.posServer.addVote();
+
+                    if (Server.posServer.getVotes() >= 2) {
+                        Server.posServer.setVotes(0);
+                        restartGame();
+                    }
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            remove(Restart);
+            repaint();
+        });
+
+        setButtonsEventsHandlers(RTH, () -> {
+            removeGrid();
+            mainMenu();
+            if(client != null) {
+                client.stopClient();
+            }
+            else {
+                Server.stopServer();
+            }
+        });
+
         setButtonsEventsHandlers(Rejoindre, () -> {
             remove(Heberger);
             remove(Rejoindre);
@@ -69,11 +119,7 @@ public class Tiktaktoe extends JFrame{
                 throw new RuntimeException(e);
             }
 
-            drawGrid();
-            label.setFont(labelFont);
-            label.setBounds((getWidth()-200)/2, 20, 300 , 100);
-            label.setText("C'est à l'adversaire");
-            add(label);
+            startGame();
             repaint();
         });
 
@@ -103,6 +149,8 @@ public class Tiktaktoe extends JFrame{
     }
 
     private void mainMenu() {
+        remove(RTH);
+        remove(Restart);
         remove(Jouer);
         remove(Quitter);
         remove(label);
@@ -153,6 +201,15 @@ public class Tiktaktoe extends JFrame{
         }
     }
 
+    public void removeGrid() {
+        for (int i = 0; i < 9; i++) {
+            cases[i].setText("");
+            remove(cases[i]);
+        }
+        label.setText("En attente d'un joueur...");  // Vous pouvez ajuster le texte en conséquence
+        repaint();
+    }
+
     /** Cette méthode initialisera l'évènement du bouton voulut avec une action voulue */
     private void setButtonsEventsHandlers(JButton button, Runnable action) {
         button.addActionListener(new ActionListener() {
@@ -173,16 +230,33 @@ public class Tiktaktoe extends JFrame{
     }
 
     public void startGame() {
+        turn = 1;
+        remove(Restart);
+        remove(RTH);
         remove(label);
         drawGrid();
         repaint();
         label.setFont(labelFont);
         label.setBounds((getWidth()-200)/2, 20, 300 , 100);
-        label.setText("C'est votre tour");
+
+        if (client == null) {
+            label.setText("C'est votre tour");
+        }
+        else {
+            label.setText("C'est à l'adversaire");
+        }
+
         add(label);
         repaint();
 
         Server.GameStarted = true;
+    }
+
+    public void restartGame() {
+        turn = 1;
+        won = false;
+        removeGrid();
+        startGame();
     }
 
     public void stopGame() {
@@ -206,6 +280,8 @@ public class Tiktaktoe extends JFrame{
                     if (checkWin()) {
                         System.out.println("Gagné!");
                         label.setText("Gagné!");
+                        add(Restart);
+                        add(RTH);
                         won = true;
                     }
                     else {
@@ -218,6 +294,8 @@ public class Tiktaktoe extends JFrame{
                     if (checkWin()) {
                         System.out.println("Perdu!");
                         label.setText("Perdu!");
+                        add(Restart);
+                        add(RTH);
                         won = true;
                     }
                     else{
@@ -242,6 +320,8 @@ public class Tiktaktoe extends JFrame{
                     if (checkWin()) {
                         System.out.println("Gagné!");
                         label.setText("Gagné!");
+                        add(Restart);
+                        add(RTH);
                         won = true;
                     }
                     else{
@@ -254,6 +334,8 @@ public class Tiktaktoe extends JFrame{
                     if (checkWin()) {
                         System.out.println("Perdu!");
                         label.setText("Perdu!");
+                        add(Restart);
+                        add(RTH);
                         won = true;
                     }
                     else {
