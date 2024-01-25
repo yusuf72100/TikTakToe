@@ -18,7 +18,7 @@ public class Tiktaktoe extends JFrame{
     private final JButton RTH;
     private final Font labelFont;
     private final JLabel label;
-    private final JButton[] cases;
+    private static JButton[] cases;
     private final JMenu MainMenu = new JMenu("Main");
     private static Client client;
     private static Server server;
@@ -298,9 +298,17 @@ public class Tiktaktoe extends JFrame{
                         add(RTH);
                         won = true;
                     }
-                    else {
+                    else if (!egality()) {
                         System.out.println("C'est à l'adversaire");
                         label.setText("C'est à l'adversaire");
+                    }
+                    else {
+                        System.out.println("Égalité!");
+                        label.setText("Égalité!");
+                        repaint();
+                        won = true;
+                        add(Restart);
+                        add(RTH);
                     }
                     client.sendData(position);
                 }
@@ -312,9 +320,17 @@ public class Tiktaktoe extends JFrame{
                         add(RTH);
                         won = true;
                     }
-                    else{
+                    else if(!egality()) {
                         System.out.println("C'est votre tour");
                         label.setText("C'est votre tour");
+                    }
+                    else{
+                        System.out.println("Égalité!");
+                        label.setText("Égalité!");
+                        repaint();
+                        won = true;
+                        add(Restart);
+                        add(RTH);
                     }
                 }
             }
@@ -338,9 +354,17 @@ public class Tiktaktoe extends JFrame{
                         add(RTH);
                         won = true;
                     }
-                    else{
+                    else if(!egality()){
                         System.out.println("C'est à l'adversaire");
                         label.setText("C'est à l'adversaire");
+                    }
+                    else {
+                        System.out.println("Égalité!");
+                        label.setText("Égalité!");
+                        repaint();
+                        won = true;
+                        add(Restart);
+                        add(RTH);
                     }
                     Server.posServer.sendDataToClient(position);
                 }
@@ -352,9 +376,18 @@ public class Tiktaktoe extends JFrame{
                         add(RTH);
                         won = true;
                     }
+                    else if (!egality()) {
+                        System.out.println("C'est à l'adversaire");
+                        label.setText("C'est à l'adversaire");
+                    }
                     else {
-                        System.out.println("C'est votre tour");
-                        label.setText("C'est votre tour");
+                        System.out.println("Égalité!");
+                        label.setText("Égalité!");
+                        repaint();
+                        won = true;
+                        add(Restart);
+                        add(RTH);
+                        return ;
                     }
                 }
             }
@@ -388,6 +421,20 @@ public class Tiktaktoe extends JFrame{
         }
 
         return false;
+    }
+
+    private static boolean egality() {
+        boolean egality = false;
+        for (int i = 0; i < cases.length ; i++){
+            if (cases[i].getText() != "") {
+                egality = true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        return egality;
     }
 
     public static void main(String[] args){
