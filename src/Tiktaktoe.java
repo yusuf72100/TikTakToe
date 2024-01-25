@@ -101,10 +101,15 @@ public class Tiktaktoe extends JFrame{
             removeGrid();
             mainMenu();
             if(client != null) {
-                client.stopClient();
+                try {
+                    client.sendData(100);
+                    client.stopClient();
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
             else {
-                Server.stopServer();
+                stopGame();
             }
         });
 
@@ -125,7 +130,11 @@ public class Tiktaktoe extends JFrame{
 
         setButtonsEventsHandlers(Quitter, () -> {
             Server.stopServer();
-            client.stopClient();
+            try {
+                client.stopClient();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
             dispose(); // Ferme la fenêtre
             System.exit(0);
         });
@@ -141,7 +150,13 @@ public class Tiktaktoe extends JFrame{
             @Override
             public void windowClosing(WindowEvent e) {
                 Server.stopServer();
-                if (client != null) client.stopClient();
+                if (client != null) {
+                    try {
+                        client.stopClient();
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
                 dispose(); // Ferme la fenêtre
                 System.exit(0);
             }
@@ -206,7 +221,7 @@ public class Tiktaktoe extends JFrame{
             cases[i].setText("");
             remove(cases[i]);
         }
-        label.setText("En attente d'un joueur...");  // Vous pouvez ajuster le texte en conséquence
+        label.setText("En attente d'un joueur...");
         repaint();
     }
 
@@ -231,6 +246,7 @@ public class Tiktaktoe extends JFrame{
 
     public void startGame() {
         turn = 1;
+        won = false;
         remove(Restart);
         remove(RTH);
         remove(label);
@@ -261,9 +277,7 @@ public class Tiktaktoe extends JFrame{
 
     public void stopGame() {
         Server.stopServer();
-        for (int i = 0; i < 9; i++) {
-            remove(cases[i]);
-        }
+        removeGrid();
         mainMenu();
         repaint();
     }

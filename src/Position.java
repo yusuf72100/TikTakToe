@@ -107,8 +107,27 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
         return nb_votant;
     }
 
-    @Override
     public void setVotes(int position) throws RemoteException {
         nb_votant = position;
+    }
+
+    public void stopServer() throws RemoteException {
+        try {
+            UnicastRemoteObject.unexportObject(this, true);
+            System.out.println("Serveur arrêté");
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'arrêt du serveur");
+            System.out.println(e.toString());
+        }
+    }
+
+    public void stopClient() throws RemoteException {
+        try {
+            UnicastRemoteObject.unexportObject(this, true);
+            System.out.println("Client arrêté");
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'arrêt du client");
+            System.out.println(e.toString());
+        }
     }
 }

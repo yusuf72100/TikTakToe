@@ -39,7 +39,7 @@ public class Server {
             tiktaktoe = ttt;
             System.out.println( "Serveur : Construction de l'implementation");
             System.out.println("Objet Position lié dans le RMIregistry");
-            registry = LocateRegistry.createRegistry(1099);
+            if (registry == null) registry = LocateRegistry.createRegistry(1099);
             Naming.rebind("rmi://localhost:1099/Position", posServer);
             System.out.println("Attente des invocations des clients ...");
 
@@ -52,7 +52,12 @@ public class Server {
     public static void stopServer() {
         try {
             GameStarted = false;
-            posServer.sendDataToClient(101);
+
+            if (posServer != null) {
+                posServer.sendDataToClient(101);
+                UnicastRemoteObject.unexportObject(posServer, true);
+            }
+
             if (registry != null) {
                 registry.unbind("rmi://localhost:1099/Position");
                 UnicastRemoteObject.unexportObject(registry, true);
