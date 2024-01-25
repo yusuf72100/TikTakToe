@@ -20,7 +20,7 @@ public class Server {
         try {
             GameStarted = false;
             /** Récupération automatique de l'adresse ip locale */
-            try {
+            /*try {
                 Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
                 while (interfaces.hasMoreElements()) {
                     NetworkInterface iface = interfaces.nextElement();
@@ -33,7 +33,7 @@ public class Server {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
 
             posServer = new Position(ttt);
             tiktaktoe = ttt;

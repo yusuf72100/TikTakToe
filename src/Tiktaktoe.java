@@ -24,6 +24,8 @@ public class Tiktaktoe extends JFrame{
     private static Server server;
     public static boolean won;
     private static int turn;
+    private JTextField textField;
+    private final JButton valider;
 
     /** Ce constructeur initialisera la fenêtre */
     Tiktaktoe() {
@@ -31,7 +33,6 @@ public class Tiktaktoe extends JFrame{
         setSize(600 , 600);
         turn = 1;
         won = false;
-
         Restart = new JButton("Rejouer");
         Restart.setBounds(10,50,100,25);
         RTH = new JButton("Quitter");
@@ -49,8 +50,27 @@ public class Tiktaktoe extends JFrame{
         Quitter.setBounds((getWidth()/2)-150,getHeight()/2,300,100);
         Rejoindre = new JButton("Rejoindre-(placeholder)");
         Rejoindre.setBounds((getWidth()/2)-150,getHeight()/2,300,100);
+        valider = new JButton("Valider");
+        valider.setBounds((getWidth()/2)-150,getHeight()/2,300,100);
+        textField = new JTextField("Nom de l'hôte");
+        textField.setBounds((getWidth()/2)-150,getHeight()/2-valider.getHeight() - 20,300,100);
 
         mainMenu();
+
+        setButtonsEventsHandlers(valider, () -> {
+            String hostname = textField.getText();
+
+            try {
+                client = new Client(hostname, this);
+                client.server.registerClient(client.client);
+                client.sendData(99);
+            } catch (RemoteException | MalformedURLException | NotBoundException r) {
+                throw new RuntimeException(r);
+            }
+
+            startGame();
+            repaint();
+        });
 
         setButtonsEventsHandlers(Jouer, () -> {
             remove(Jouer);
@@ -116,24 +136,19 @@ public class Tiktaktoe extends JFrame{
         setButtonsEventsHandlers(Rejoindre, () -> {
             remove(Heberger);
             remove(Rejoindre);
-            try {
-                client = new Client("localhost", this);
-                client.server.registerClient(client.client);
-                client.sendData(99);
-            } catch (RemoteException | MalformedURLException | NotBoundException e) {
-                throw new RuntimeException(e);
-            }
-
-            startGame();
+            add(textField);
+            add(valider);
             repaint();
         });
 
         setButtonsEventsHandlers(Quitter, () -> {
             Server.stopServer();
-            try {
-                client.stopClient();
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+            if (client != null) {
+                try {
+                    client.stopClient();
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
             }
             dispose(); // Ferme la fenêtre
             System.exit(0);
@@ -149,13 +164,15 @@ public class Tiktaktoe extends JFrame{
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                Server.stopServer();
                 if (client != null) {
                     try {
                         client.stopClient();
                     } catch (RemoteException ex) {
                         throw new RuntimeException(ex);
                     }
+                }
+                else {
+                    Server.stopServer();
                 }
                 dispose(); // Ferme la fenêtre
                 System.exit(0);
@@ -247,6 +264,8 @@ public class Tiktaktoe extends JFrame{
     public void startGame() {
         turn = 1;
         won = false;
+        remove(textField);
+        remove(valider);
         remove(Restart);
         remove(RTH);
         remove(label);
@@ -377,8 +396,8 @@ public class Tiktaktoe extends JFrame{
                         won = true;
                     }
                     else if (!egality()) {
-                        System.out.println("C'est à l'adversaire");
-                        label.setText("C'est à l'adversaire");
+                        System.out.println("C'est ");
+                        label.setText("C'est votre tour");
                     }
                     else {
                         System.out.println("Égalité!");

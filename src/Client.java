@@ -39,6 +39,7 @@ public class Client {
     /** Méthode d'arrêt de la communication du client */
     public void stopClient() throws RemoteException {
         try {
+            sendData(100);
             client.stopClient();
         } catch (RemoteException e) {
             System.out.println("Erreur lors de l'arrêt du client");
