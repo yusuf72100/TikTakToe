@@ -20,7 +20,7 @@ public class Tiktaktoe extends JFrame{
     private final JMenu MainMenu = new JMenu("Main");
     private static Client client;
     private static Server server;
-    private static int won;
+    public static boolean won;
     private static int turn;
 
     /** Ce constructeur initialisera la fenêtre */
@@ -29,7 +29,7 @@ public class Tiktaktoe extends JFrame{
         setSize(600 , 600);
         turn = 1;
 
-        won = 0;
+        won = false;
         labelFont = new Font("Arial", Font.BOLD, 20);
         label = new JLabel("En attente d'un joueur...");
 
@@ -68,7 +68,12 @@ public class Tiktaktoe extends JFrame{
             } catch (RemoteException | MalformedURLException | NotBoundException e) {
                 throw new RuntimeException(e);
             }
+
             drawGrid();
+            label.setFont(labelFont);
+            label.setBounds((getWidth()-200)/2, 20, 300 , 100);
+            label.setText("C'est à l'adversaire");
+            add(label);
             repaint();
         });
 
@@ -171,6 +176,12 @@ public class Tiktaktoe extends JFrame{
         remove(label);
         drawGrid();
         repaint();
+        label.setFont(labelFont);
+        label.setBounds((getWidth()-200)/2, 20, 300 , 100);
+        label.setText("C'est votre tour");
+        add(label);
+        repaint();
+
         Server.GameStarted = true;
     }
 
@@ -185,32 +196,102 @@ public class Tiktaktoe extends JFrame{
 
     /** Méthode pour jouer un coup client */
     public void turnClient(int position) {
-        // Tour du client
-        if (turn == 2 && client == null || turn == 2 && Objects.equals(cases[position].getText(), "")) {
-            label.setText("C'est votre tour");
-            label.setFont(labelFont);
-            label.setBounds((getWidth()-200)/2, 20, 300 , 100);
-            add(label);
+        if (!won) {
+            // Tour du client
+            if (turn == 2 && client == null || turn == 2 && Objects.equals(cases[position].getText(), "")) {
+                cases[position].setText("O");
+                turn = 1;
+
+                if (client != null) {
+                    if (checkWin()) {
+                        System.out.println("Gagné!");
+                        label.setText("Gagné!");
+                        won = true;
+                    }
+                    else {
+                        System.out.println("C'est à l'adversaire");
+                        label.setText("C'est à l'adversaire");
+                    }
+                    client.sendData(position);
+                }
+                else {
+                    if (checkWin()) {
+                        System.out.println("Perdu!");
+                        label.setText("Perdu!");
+                        won = true;
+                    }
+                    else{
+                        System.out.println("C'est votre tour");
+                        label.setText("C'est votre tour");
+                    }
+                }
+            }
             repaint();
-            cases[position].setText("O");
-            turn = 1;
-            client.sendData(position);
         }
     }
 
     /** Méthode pour jouer un coup server */
     public void turnServer(int position) throws RemoteException {
-        // Tour du server
-        if (turn == 1 && client != null || turn == 1 && Objects.equals(cases[position].getText(), "")) {
-            label.setText("C'est votre tour");
-            label.setFont(labelFont);
-            label.setBounds((getWidth()-200)/2, 20, 300 , 100);
-            add(label);
+        if (!won){
+            // Tour du server
+            if (turn == 1 && client != null || turn == 1 && Objects.equals(cases[position].getText(), "")) {
+                cases[position].setText("X");
+                turn = 2;
+
+                if (client == null) {
+                    if (checkWin()) {
+                        System.out.println("Gagné!");
+                        label.setText("Gagné!");
+                        won = true;
+                    }
+                    else{
+                        System.out.println("C'est à l'adversaire");
+                        label.setText("C'est à l'adversaire");
+                    }
+                    Server.posServer.sendDataToClient(position);
+                }
+                else {
+                    if (checkWin()) {
+                        System.out.println("Perdu!");
+                        label.setText("Perdu!");
+                        won = true;
+                    }
+                    else {
+                        System.out.println("C'est votre tour");
+                        label.setText("C'est votre tour");
+                    }
+                }
+            }
             repaint();
-            cases[position].setText("X");
-            turn = 2;
-            Server.posServer.sendDataToClient(position);
         }
+    }
+
+    private boolean checkSymbol(String symbol1, String symbol2, String symbol3) {
+        return !symbol1.equals("") && symbol1.equals(symbol2) && symbol1.equals(symbol3);
+    }
+
+    public boolean checkWin() {
+        // Vérifier les lignes
+        for (int i = 0; i < 3; i++) {
+            if (checkSymbol(cases[i * 3].getText(), cases[i * 3 + 1].getText(), cases[i * 3 + 2].getText())) {
+                return true;
+            }
+        }
+
+        // Vérifier les colonnes
+        for (int i = 0; i < 3; i++) {
+            if (checkSymbol(cases[i].getText(), cases[i + 3].getText(), cases[i + 6].getText())) {
+                return true;
+            }
+        }
+
+        // Vérifier les diagonales
+        if (checkSymbol(cases[0].getText(), cases[4].getText(), cases[8].getText()) ||
+                checkSymbol(cases[2].getText(), cases[4].getText(), cases[6].getText())) {
+            return true;
+        }
+
+        return false;
     }
 
     public static void main(String[] args){
