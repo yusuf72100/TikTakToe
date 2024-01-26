@@ -54,9 +54,9 @@ public class Client {
             /**
              * on envoi 100 pour signaler au serveur qu'on se déconnecte
              */
-            client = null;
             sendData(100);
             client.stopClient();
+            client = null;
         } catch (RemoteException e) {
             System.out.println("Erreur lors de l'arrêt du client");
             System.out.println(e.toString());

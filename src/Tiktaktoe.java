@@ -314,6 +314,7 @@ public class Tiktaktoe extends JFrame{
      */
     public void stopGame() {
         Server.stopServer();
+        client = null;
         removeGrid();
         mainMenu();
         repaint();
