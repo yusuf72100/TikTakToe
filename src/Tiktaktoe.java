@@ -42,13 +42,13 @@ public class Tiktaktoe extends JFrame{
         label = new JLabel("En attente d'un joueur...");
 
         cases = new JButton[9];
-        Jouer = new JButton("Jouer-(placeholder)");
+        Jouer = new JButton("Jouer");
         Jouer.setBounds((getWidth()/2)-150,getHeight()/2-150,300,100);
-        Heberger = new JButton("Héberger-(placeholder)");
+        Heberger = new JButton("Héberger");
         Heberger.setBounds((getWidth()/2)-150,getHeight()/2-150,300,100);
-        Quitter = new JButton("Quitter-(placeholder)");
+        Quitter = new JButton("Quitter");
         Quitter.setBounds((getWidth()/2)-150,getHeight()/2,300,100);
-        Rejoindre = new JButton("Rejoindre-(placeholder)");
+        Rejoindre = new JButton("Rejoindre");
         Rejoindre.setBounds((getWidth()/2)-150,getHeight()/2,300,100);
         valider = new JButton("Valider");
         valider.setBounds((getWidth()/2)-150,getHeight()/2,300,100);
