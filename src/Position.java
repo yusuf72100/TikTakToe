@@ -186,6 +186,7 @@ public class Position extends UnicastRemoteObject implements PositionInterface {
     public void stopClient() throws RemoteException {
         try {
             UnicastRemoteObject.unexportObject(this, true);
+            client = null;
             System.out.println("Client arrêté");
         } catch (Exception e) {
             System.out.println("Erreur lors de l'arrêt du client");

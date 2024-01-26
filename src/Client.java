@@ -54,6 +54,7 @@ public class Client {
             /**
              * on envoi 100 pour signaler au serveur qu'on se déconnecte
              */
+            client = null;
             sendData(100);
             client.stopClient();
         } catch (RemoteException e) {
