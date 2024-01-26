@@ -12,6 +12,5 @@ public interface PositionInterface extends Remote {
     void addVote() throws RemoteException;
     int getVotes() throws RemoteException;
     void setVotes(int position) throws RemoteException;
-
     void stopClient() throws RemoteException;
 }

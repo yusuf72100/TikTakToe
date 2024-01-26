@@ -180,6 +180,9 @@ public class Tiktaktoe extends JFrame{
         });
     }
 
+    /**
+     * Affichage du main menu
+     */
     private void mainMenu() {
         remove(RTH);
         remove(Restart);
@@ -191,7 +194,7 @@ public class Tiktaktoe extends JFrame{
         repaint();
     }
 
-    /** Cette méthode initialisera l'affichage de la grille */
+    /** Initialisera l'affichage de la grille */
     private void drawGrid() {
         int buttonSize = 80;
         int gap = 10;           // Espacement entre les boutons
@@ -233,6 +236,9 @@ public class Tiktaktoe extends JFrame{
         }
     }
 
+    /**
+     * Désaffichage et réinitialisation de la grille
+     */
     public void removeGrid() {
         for (int i = 0; i < 9; i++) {
             cases[i].setText("");
@@ -242,7 +248,7 @@ public class Tiktaktoe extends JFrame{
         repaint();
     }
 
-    /** Cette méthode initialisera l'évènement du bouton voulut avec une action voulue */
+    /** Initialisera l'évènement du bouton voulut avec une action voulue */
     private void setButtonsEventsHandlers(JButton button, Runnable action) {
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -251,6 +257,9 @@ public class Tiktaktoe extends JFrame{
         });
     }
 
+    /**
+     * Écran d'attente de joueurs pour le serveur
+     */
     private void waitingScreen() {
         remove(Heberger);
         remove(Rejoindre);
@@ -261,6 +270,9 @@ public class Tiktaktoe extends JFrame{
         repaint();
     }
 
+    /**
+     * Démarrage de la partie (à utiliser côté client et côté server)
+     */
     public void startGame() {
         turn = 1;
         won = false;
@@ -287,6 +299,9 @@ public class Tiktaktoe extends JFrame{
         Server.GameStarted = true;
     }
 
+    /**
+     * Réinitialision et de redémarrage de la partie
+     */
     public void restartGame() {
         turn = 1;
         won = false;
@@ -294,6 +309,9 @@ public class Tiktaktoe extends JFrame{
         startGame();
     }
 
+    /**
+     * Méthode d'arrêt de la partie en cours
+     */
     public void stopGame() {
         Server.stopServer();
         removeGrid();
@@ -301,7 +319,10 @@ public class Tiktaktoe extends JFrame{
         repaint();
     }
 
-    /** Méthode pour jouer un coup client */
+    /**
+     * Jouer un coup client
+     * @param position
+     */
     public void turnClient(int position) {
         if (!won) {
             // Tour du client
@@ -357,7 +378,11 @@ public class Tiktaktoe extends JFrame{
         }
     }
 
-    /** Méthode pour jouer un coup server */
+    /**
+     * Jouer un coup server
+     * @param position
+     * @throws RemoteException
+     */
     public void turnServer(int position) throws RemoteException {
         if (!won){
             // Tour du server
@@ -414,10 +439,21 @@ public class Tiktaktoe extends JFrame{
         }
     }
 
+    /**
+     * Vérifie la valeur des cases en fonction du coup joué
+     * @param symbol1
+     * @param symbol2
+     * @param symbol3
+     * @return
+     */
     private boolean checkSymbol(String symbol1, String symbol2, String symbol3) {
         return !symbol1.equals("") && symbol1.equals(symbol2) && symbol1.equals(symbol3);
     }
 
+    /**
+     * Vérifie si on est dans le cas d'une victoire
+     * @return
+     */
     public boolean checkWin() {
         // Vérifier les lignes
         for (int i = 0; i < 3; i++) {
@@ -442,6 +478,10 @@ public class Tiktaktoe extends JFrame{
         return false;
     }
 
+    /**
+     * Vérifie si on est dans le cas d'une égalité
+     * @return
+     */
     private static boolean egality() {
         boolean egality = false;
         for (int i = 0; i < cases.length ; i++){
@@ -456,6 +496,10 @@ public class Tiktaktoe extends JFrame{
         return egality;
     }
 
+    /**
+     * Programme principal
+     * @param args
+     */
     public static void main(String[] args){
         Tiktaktoe ttt = new Tiktaktoe();
         Grid grid = new Grid();

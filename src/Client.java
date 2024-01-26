@@ -12,7 +12,12 @@ public class Client {
     public PositionInterface client;
 
     /**
-     * Cette méthode enverra '99' au serveur ce qui signifira une demande de lancement de partie
+     * Initialisation des instances client
+     * @param Hostname
+     * @param tiktaktoe
+     * @throws RemoteException
+     * @throws MalformedURLException
+     * @throws NotBoundException
      */
     public Client (String Hostname, Tiktaktoe tiktaktoe) throws RemoteException, MalformedURLException, NotBoundException {
         hostname = Hostname;
@@ -22,6 +27,10 @@ public class Client {
         server = (PositionInterface) Naming.lookup("rmi://" + this.hostname + ":1099/Position");
     }
 
+    /**
+     * Envoyer une donnée au serveur
+     * @param position
+     */
     public void sendData(int position){
         try {
             int result = server.position(position);
@@ -36,9 +45,15 @@ public class Client {
         }
     }
 
-    /** Méthode d'arrêt de la communication du client */
+    /**
+     * Arrêt de la communication client
+     * @throws RemoteException
+     */
     public void stopClient() throws RemoteException {
         try {
+            /**
+             * on envoi 100 pour signaler au serveur qu'on se déconnecte
+             */
             sendData(100);
             client.stopClient();
         } catch (RemoteException e) {

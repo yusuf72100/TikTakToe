@@ -16,6 +16,10 @@ public class Server {
     public static  Position posServer;
     private static Tiktaktoe tiktaktoe;
 
+    /**
+     * Méthode qui fera office de constructeur
+     * @param ttt
+     */
     public static void startServer(Tiktaktoe ttt) {
         try {
             GameStarted = false;
@@ -49,15 +53,24 @@ public class Server {
         }
     }
 
+    /**
+     * Arrêt du serveur
+     */
     public static void stopServer() {
         try {
             GameStarted = false;
 
             if (posServer != null) {
+                /**
+                 * La valeur 101 est une demande de kick du serveur au client
+                 */
                 posServer.sendDataToClient(101);
                 UnicastRemoteObject.unexportObject(posServer, true);
             }
 
+            /**
+             * On débind le registre
+             */
             if (registry != null) {
                 registry.unbind("rmi://localhost:1099/Position");
                 UnicastRemoteObject.unexportObject(registry, true);
